@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator"
-import User from "../../models/user.js"
+import User from "../models/user.js"
 import jwt from 'jsonwebtoken'
 
 
@@ -14,6 +14,7 @@ export  const login = async (req, res, next) => {
             })
         }else {
             const {email, password} = req.body
+            console.log(req.body,'request')
             const user = await User.findOne({email})
             if(!user){
                 res.status(404).json({
