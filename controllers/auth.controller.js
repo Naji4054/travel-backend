@@ -30,7 +30,9 @@ export  const login = async (req, res, next) => {
                 res.status(200).json({
                     status: true,
                     message: "login successfull",
-                    data:null,
+                    data:{
+                        role: user.role
+                    },
                     token
                 })
             }
