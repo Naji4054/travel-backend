@@ -12,16 +12,18 @@ const packageSchema = new mongoose.Schema({
     description: { type: String , required: true },
     duration: { type: String, required: true },
     type: { type: String, enum: ['international', 'domestic', 'group'], required: true },
-    category: { type: String, enum: ['wilderness', 'cities', 'beaches'], required: true },
+    category: { 
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'Category'
+    },
     date: { type:String,  },
     image: { 
         type: [imageSchema], default: null
     },
     status: { type: String, required: true},
     location : {
-        country : { type: String , required: true},
-        state: { type: String },
-        city: { type: String}
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Location'
     },
     price: { type: String , required: true}
 

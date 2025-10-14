@@ -5,8 +5,11 @@ import { authenticate, authorize } from "../middlewares/authMiddleware.js";
 const packageRoutes = Router()
 
 packageRoutes.get('/all-packages', listAllPackages)
-packageRoutes.post('/add-packages',authenticate, authorize(['admin']), addPackages )
-packageRoutes.patch('/update-packages/:id',authenticate, authorize(['admin']), updatePackages )
-packageRoutes.delete('/delete-packages/:id',authenticate, authorize(['admin']), deletePackages)
+
+packageRoutes.use(authenticate)
+packageRoutes.use(authorize(['admin']))
+packageRoutes.post('/add-packages', addPackages )
+packageRoutes.patch('/update-packages/:id', updatePackages )
+packageRoutes.delete('/delete-packages/:id', deletePackages)
 
 export default packageRoutes;
