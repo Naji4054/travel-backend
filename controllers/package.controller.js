@@ -1,6 +1,42 @@
 import { validationResult } from "express-validator"
 import Package from "../models/package.js"
+import Category from "../models/category.js"
+import Location from "../models/location.js"
 
+export const getAddOptions = async ( req, res, next ) => {
+    try {
+        const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            res.status(400).json({
+                status: false,
+                messgae: " validation failed",
+                data: null
+            })
+        }else {
+         //
+         const locations = await Location.find({ status: 'published'}).select('_id title').exec()
+         const category = await Category.find({ status: 'published'}).select('title _id').exec()
+        //  const category = 
+
+         res.status(200).json({
+            status: true,
+            message: '',
+            data: {
+                locations,
+                category
+
+            }
+         })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            status: false,
+            messgae: " internal server error",
+            data: null
+        })
+    }
+}
 export const listAllPackages = async ( req, res, next ) => {
     try {
         const errors = validationResult(req)
@@ -44,7 +80,9 @@ export const addPackages = async ( req, res, next ) => {
                 duration,
                 type,
                 category,
-                date,
+                dateA,
+                dateB,
+                dateC,
                 image,
                 status,
                 location,
@@ -58,8 +96,9 @@ export const addPackages = async ( req, res, next ) => {
                 duration,
                 type,
                 category,
-                date,
-            
+                dateA,
+                dateB,
+                dateC,
                 status,
                 location,
                 price

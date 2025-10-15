@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { addPackages, deletePackages, listAllPackages, updatePackages } from "../controllers/package.controller.js";
+import { addPackages, deletePackages, getAddOptions, listAllPackages, updatePackages } from "../controllers/package.controller.js";
 import { authenticate, authorize } from "../middlewares/authMiddleware.js";
 
 const packageRoutes = Router()
 
 packageRoutes.get('/all-packages', listAllPackages)
+packageRoutes.get('/add-options', getAddOptions)
 
 packageRoutes.use(authenticate)
 packageRoutes.use(authorize(['admin']))
