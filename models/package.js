@@ -11,7 +11,7 @@ const packageSchema = new mongoose.Schema({
     title: { type:String, required: true },
     description: { type: String , required: true },
     duration: { type: String, required: true },
-    type: { type: String, enum: ['international', 'domestic', 'group'], required: true },
+    type: { type: String, enum: ['International', 'Domestic', 'Group'], required: true },
     category: { 
        type: mongoose.Schema.Types.ObjectId,
        ref: 'Category'

@@ -13,6 +13,7 @@ import multer from "multer";
  const upload = multer( {
     storage: storage,
     limits: {fileSize: 30 * 1024 * 1024}
-}).fields([{name: 'field1'},{name: 'field2'},{name: 'field3'},{name: 'field4'}]);
+})
 
-export default upload;
+export const multipleUpload = upload.array("images", 10)
+

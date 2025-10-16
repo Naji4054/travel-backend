@@ -16,7 +16,11 @@ export const getAddOptions = async ( req, res, next ) => {
          //
          const locations = await Location.find({ status: 'published'}).select('_id title').exec()
          const category = await Category.find({ status: 'published'}).select('title _id').exec()
-        //  const category = 
+
+
+        //  Category.find({ status: 'published' }) → fetches all categories from DB that are published.
+
+         // .select('_id title') → only return _id and title fields.
 
          res.status(200).json({
             status: true,
@@ -83,12 +87,19 @@ export const addPackages = async ( req, res, next ) => {
                 dateA,
                 dateB,
                 dateC,
-                image,
                 status,
                 location,
                 price
 
             } = req.body
+
+            const images = req.files?.map(file => ({
+                url: file.path,          // local path
+                publicId: file.filename, // use filename as identifier
+                altText: file.originalname,
+                isCover: true,          // optional, you can mark the first as cover
+              })) || [];
+          
             
             const newPackage = new Package({
                 title,
@@ -99,6 +110,7 @@ export const addPackages = async ( req, res, next ) => {
                 dateA,
                 dateB,
                 dateC,
+                image: images,
                 status,
                 location,
                 price
@@ -121,6 +133,7 @@ export const addPackages = async ( req, res, next ) => {
         })
     }
 }
+
 
 export const updatePackages = async ( req, res, next ) => {
     try {
