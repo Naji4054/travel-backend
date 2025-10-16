@@ -51,7 +51,7 @@ export const listAllPackages = async ( req, res, next ) => {
                 data: null
             })
         }else {
-           const packages = await Package.find({})
+           const packages = await Package.find({}).populate('location').populate('category')
            res.status(200).json({
                 status: true,
                 message: "lising all packages",
@@ -215,6 +215,54 @@ export const deletePackages = async (req, res, next ) => {
                 }
             }
           
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            status: false,
+            messgae: " internal server error",
+            data: null
+        })
+    }
+}
+
+export const SinglePackage = async ( req, res, next ) => {
+    try {
+        const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            res.status(400).json({
+                status: false,
+                messgae: " validation failed",
+                data: null
+            })
+        }else {
+            const {id} = req.params
+            console.log(id,'iddddd')
+          if(!id){
+            res.status(400).json({
+                status: false,
+                message: "package id  not found",
+                data: null
+            })
+          }else {
+            const packageView = await Package.findById(id)
+            .populate('category', 'title')
+            .populate('location', 'title').exec()
+            console.log(packageView,"....view")
+            if(!packageView){
+                res.status(400).json({
+                    status: false,
+                    message: "package not found",
+                    data: null
+                })
+            } else {
+                res.status(200).json({
+                    status: true,
+                    message: " package fetched successfully",
+                    data: packageView
+                })
+            }
+          }
         }
     } catch (error) {
         console.log(error)
