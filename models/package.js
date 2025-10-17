@@ -14,16 +14,17 @@ const packageSchema = new mongoose.Schema({
     type: { type: String, enum: ['International', 'Domestic', 'Group'], required: true },
     category: { 
        type: mongoose.Schema.Types.ObjectId,
-       ref: 'Category'
+       ref: 'Category',
+       required: true
     },
-    date: { type:String,  },
     image: { 
         type: [imageSchema], default: null
     },
     status: { type: String, required: true},
     location : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location'
+        ref: 'Location',
+        required: true
     },
     price: { type: String , required: true}
 

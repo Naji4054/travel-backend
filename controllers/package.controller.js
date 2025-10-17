@@ -51,7 +51,9 @@ export const listAllPackages = async ( req, res, next ) => {
                 data: null
             })
         }else {
-           const packages = await Package.find({}).populate('location').populate('category')
+           const packages = await Package.find({}).populate('location').populate('category') 
+
+           //.populate('location') tells Mongoose:“Go to the Location collection, find the document where _id = 671c7b..., and replace it with that object.”
            res.status(200).json({
                 status: true,
                 message: "lising all packages",
@@ -78,21 +80,29 @@ export const addPackages = async ( req, res, next ) => {
                 data: null
             })
         }else {
-            const {
+                console.log(req.body, 'creo')
+
+            if (req.body.category && typeof req.body.category === 'string') {
+                req.body.category = JSON.parse(req.body.category);
+              }
+              if (req.body.location && typeof req.body.location === 'string') {
+                req.body.location = JSON.parse(req.body.location);
+              }
+
+              const {
                 title,
                 description,
                 duration,
                 type,
                 category,
-                dateA,
-                dateB,
-                dateC,
                 status,
                 location,
                 price
 
             } = req.body
 
+            console.log(category, 'req body')
+            console.log(req.files,'image')
             const images = req.files?.map(file => ({
                 url: file.path,          // local path
                 publicId: file.filename, // use filename as identifier
@@ -106,13 +116,10 @@ export const addPackages = async ( req, res, next ) => {
                 description,
                 duration,
                 type,
-                category,
-                dateA,
-                dateB,
-                dateC,
+                category: category._id,
                 image: images,
                 status,
-                location,
+                location: location._id,
                 price
             })
 
@@ -136,6 +143,7 @@ export const addPackages = async ( req, res, next ) => {
 
 
 export const updatePackages = async ( req, res, next ) => {
+    console.log(req.body, 'eee') 
     try {
         const errors = validationResult(req)
         if(!errors.isEmpty()){
@@ -153,8 +161,21 @@ export const updatePackages = async ( req, res, next ) => {
                     data: null
                 })
             } else {
-                const { title, description, duration, type, category, date, status, location, price } = req.body
-                const updatePackage = await Package.findByIdAndUpdate(id, {title, description, duration, type, category, date, status, location, price})
+                  if (req.body.category && typeof req.body.category === 'string') {
+                    req.body.category = JSON.parse(req.body.category);
+                  }
+                  if (req.body.location && typeof req.body.location === 'string') {
+                    req.body.location = JSON.parse(req.body.location);
+                  }
+                const { title, description, duration, type, category, status, location, price } = req.body
+                const images = req.files?.map((file)=>({
+                    url: file.path ,
+                    publicId: file.filename,
+                    altText: file.originalname,
+                    isCover: true
+                })|| []);
+               
+                const updatePackage = await Package.findByIdAndUpdate(id, {title, description, duration, type, category, image: images, status, location, price}, { new: true })
                 if(!updatePackage){
                     res.status(400).json({
                         status: false,
@@ -248,7 +269,10 @@ export const SinglePackage = async ( req, res, next ) => {
             const packageView = await Package.findById(id)
             .populate('category', 'title')
             .populate('location', 'title').exec()
-            console.log(packageView,"....view")
+
+        //     This time, you are fetching one single package by ID.
+        //    .populate('category', 'title') means:“Replace the category ObjectId with the Category document, but include only its title field.”
+
             if(!packageView){
                 res.status(400).json({
                     status: false,
@@ -273,3 +297,9 @@ export const SinglePackage = async ( req, res, next ) => {
         })
     }
 }
+
+//category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+// location: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' },
+
+// That means each package stores only the IDs of category and location — not their names.
+// When you want to display or return full details (like "title": "Domestic"), you must call populate().

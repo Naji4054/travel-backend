@@ -12,7 +12,7 @@ packageRoutes.get('/view-package/:id', SinglePackage)
 packageRoutes.use(authenticate)
 packageRoutes.use(authorize(['admin']))
 packageRoutes.post('/add-packages',multipleUpload, addPackages )
-packageRoutes.patch('/update-packages/:id', updatePackages )
+packageRoutes.patch('/update-packages/:id', multipleUpload, updatePackages )
 packageRoutes.delete('/delete-packages/:id', deletePackages)
 
 
