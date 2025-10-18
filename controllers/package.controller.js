@@ -270,7 +270,7 @@ export const SinglePackage = async ( req, res, next ) => {
             .populate('category', 'title')
             .populate('location', 'title').exec()
 
-        //     This time, you are fetching one single package by ID.
+        //     This time,  fetching one single package by ID.
         //    .populate('category', 'title') means:“Replace the category ObjectId with the Category document, but include only its title field.”
 
             if(!packageView){

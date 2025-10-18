@@ -10,10 +10,15 @@ import locationRoutes from './routes/location.routes.js';
 dotenv.config();
 const app = express()
 
-app.use(cors())
 
 dbConfig()
-app.use(cors())
+
+const corsOptions = {
+    origin: process.env.FRONTEND_URL
+  };
+  
+  app.use(cors(corsOptions));
+  
 app.use(express.json())
 app.use('/uploads',express.static('uploads'))
 app.use('/api/v1/auth',authRoutes)
