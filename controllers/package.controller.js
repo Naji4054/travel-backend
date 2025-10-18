@@ -51,7 +51,25 @@ export const listAllPackages = async ( req, res, next ) => {
                 data: null
             })
         }else {
-           const packages = await Package.find({}).populate('location').populate('category') 
+
+            const { category, status, searchQuery } = req.query
+            
+           const filterConfig = {} 
+
+           if (searchQuery) {
+            const searchTerm = searchQuery.toLowerCase()
+            filterConfig.$or = [{title : { $regex: searchTerm, $options: "i" }}, {description: { $regex: searchTerm, $options: "i" }}]
+           }
+
+           if (category && category !== 'all') {
+            filterConfig.category = category
+           }
+
+           if (status && status !== 'all') {
+            filterConfig.status = status
+           }
+
+           const packages = await Package.find(filterConfig).populate('location').populate('category') 
 
            //.populate('location') tells Mongoose:“Go to the Location collection, find the document where _id = 671c7b..., and replace it with that object.”
            res.status(200).json({
