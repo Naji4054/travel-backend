@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.routes.js';
 import packageRoutes from './routes/package.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import locationRoutes from './routes/location.routes.js';
+import guideRoutes from './routes/guide.routes.js';
 
 dotenv.config();
 const app = express()
@@ -23,6 +24,7 @@ app.use(express.json())
 app.use('/uploads',express.static('uploads'))
 app.use('/api/v1/auth',authRoutes)
 app.use('/api/v1/packages',packageRoutes)
+app.use('/api/v1/guides',guideRoutes)
 app.use('/api/v1/category',categoryRoutes)
 app.use('/api/v1/location',locationRoutes)
 

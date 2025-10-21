@@ -145,7 +145,7 @@ export const addPackages = async ( req, res, next ) => {
 
             res.status(200).json({
                 status: true,
-                message: " package successfully",
+                message: " package added successfully",
                 data: null
             })
         }
