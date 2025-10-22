@@ -11,8 +11,24 @@ export const listAllGuide = async ( req, res, next ) => {
                 data: null
             })
         }else {
-         
-            const guides = await Guide.find({})
+            const { gender, availability, searchQuery } = req.query
+
+            const filterConfig = {}  
+            
+            if ( searchQuery){
+                const searchTerm = searchQuery.toLowerCase()
+                filterConfig.$or = [{name: { $regex: searchTerm, $options: 'i'}}, {location: {$regex: searchTerm, $options: 'i'}}]
+            }
+
+            if( gender &&  gender !== 'all'){
+                
+                filterConfig.gender= gender
+            }
+            if( availability &&  availability !== 'all'){
+
+                filterConfig.availability = availability === 'active' ? true : false
+            }
+            const guides = await Guide.find(filterConfig)
             res.status(200).json({
                 status: true,
                 message: "listing all guides",

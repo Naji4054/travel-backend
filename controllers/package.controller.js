@@ -70,6 +70,7 @@ export const listAllPackages = async ( req, res, next ) => {
            }
 
            const packages = await Package.find(filterConfig).populate('location').populate('category') 
+           
 
            //.populate('location') tells Mongoose:“Go to the Location collection, find the document where _id = 671c7b..., and replace it with that object.”
            res.status(200).json({
