@@ -76,6 +76,7 @@ export const listAllPackages = async ( req, res, next ) => {
 
            const packages = await Package.find(filterConfig).populate('location').populate('category') 
 
+//for displaying the count of filtered packages in all packages page in website
            const totalCount = await Package.countDocuments({ status: 'active' })
 
            
@@ -85,7 +86,7 @@ export const listAllPackages = async ( req, res, next ) => {
                 status: true,
                 message: "lising all packages",
                 data: packages,
-                totalCount
+                totalCount // pass in  response from backend and store in state in frontend
            })
         }
     } catch (error) {

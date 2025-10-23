@@ -7,6 +7,7 @@ import packageRoutes from './routes/package.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import locationRoutes from './routes/location.routes.js';
 import guideRoutes from './routes/guide.routes.js';
+import homeRoutes from './routes/user/home.routes.js';
 
 dotenv.config();
 const app = express()
@@ -27,6 +28,7 @@ app.use('/api/v1/packages',packageRoutes)
 app.use('/api/v1/guides',guideRoutes)
 app.use('/api/v1/category',categoryRoutes)
 app.use('/api/v1/location',locationRoutes)
+app.use('/api/v1/home',homeRoutes)
 
 app.get('/', (req, res)=> {
     res.send('API IS RUNNING...')
