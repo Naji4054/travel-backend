@@ -52,7 +52,7 @@ export const listAllPackages = async ( req, res, next ) => {
             })
         }else {
 
-            const { category, status, searchQuery } = req.query
+            const { category, status, searchQuery, type } = req.query
             
            const filterConfig = {} 
 
@@ -69,14 +69,23 @@ export const listAllPackages = async ( req, res, next ) => {
             filterConfig.status = status
            }
 
+           if (type) {
+            filterConfig.type = type
+
+           }
+
            const packages = await Package.find(filterConfig).populate('location').populate('category') 
+
+           const totalCount = await Package.countDocuments({ status: 'active' })
+
            
 
            //.populate('location') tells Mongoose:“Go to the Location collection, find the document where _id = 671c7b..., and replace it with that object.”
            res.status(200).json({
                 status: true,
                 message: "lising all packages",
-                data: packages
+                data: packages,
+                totalCount
            })
         }
     } catch (error) {
